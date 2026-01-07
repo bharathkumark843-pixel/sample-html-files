@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Reports - Asha Diagnostic Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);
+      font-family: 'Segoe UI', 'Arial', sans-serif;
+      min-height: 100vh;
+    }
+
+    .reports-container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .reports-section {
+      background: linear-gradient(120deg, #f5f7fa 0%, #c3cfe2 100%);
+      border-radius: 28px;
+      box-shadow: 0 8px 44px #66789922;
+      padding: 38px 36px;
+      margin-top: 20px;
+    }
+
+    .header-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .back-btn {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 13px;
+      padding: 10px 28px;
+      font-weight: 700;
+      font-size: 1.06rem;
+      cursor: pointer;
+      transition: transform 0.15s;
+      box-shadow: 0 2px 14px #764ba259;
+    }
+    .back-btn:hover {
+      transform: scale(1.06);
+    }
+
+    .reports-section h2 {
+      color: #764ba2;
+      font-size: 2.1rem;
+      letter-spacing: 1px;
+      text-align: center;
+      font-weight: 700;
+      text-shadow: 0 2px 12px #764ba244;
+      margin-bottom: 22px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .add-btn {
+      background: linear-gradient(90deg, #4caf50 0%, #45a049 100%);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 10px 24px;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: transform 0.12s;
+      box-shadow: 0 2px 14px #4caf5044;
+    }
+    .add-btn:hover {
+      transform: scale(1.06);
+    }
+
+    .stats-row {
+      display: flex;
+      gap: 15px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+    }
+
+    .stat-box {
+      background: linear-gradient(120deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border-radius: 14px;
+      padding: 15px 20px;
+      flex: 1;
+      min-width: 150px;
+      box-shadow: 0 2px 12px #667eea44;
+      text-align: center;
+    }
+    .stat-box-value {
+      font-size: 1.8rem;
+      font-weight: 700;
+    }
+    .stat-box-label {
+      font-size: 0.85rem;
+      opacity: 0.9;
+    }
+
+    .filter-section {
+      background: #fff;
+      border-radius: 16px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px #66789933;
+      display: flex;
+      gap: 15px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-section input, .filter-section select {
+      padding: 8px 12px;
+      border-radius: 8px;
+      border: 2px solid #667eea;
+      background: #f5f7fa;
+      font-size: 0.98rem;
+      outline: none;
+    }
+    .filter-section input:focus, .filter-section select:focus {
+      border-color: #764ba2;
+    }
+
+    .filter-btn {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      padding: 8px 18px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+    .filter-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .reports-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .report-card {
+      background: #fff;
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 4px 20px #66789922;
+      border-left: 5px solid #667eea;
+      transition: transform 0.16s, box-shadow 0.16s;
+    }
+    .report-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 32px #667eea44;
+    }
+
+    .report-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .report-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #764ba2;
+    }
+
+    .report-status {
+      background: #4caf50;
+      color: #fff;
+      padding: 3px 10px;
+      border-radius: 12px;
+      font-size: 0.8rem;
+    }
+    .report-status.pending {
+      background: #ff9800;
+    }
+
+    .report-date {
+      font-size: 0.85rem;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 10px;
+    }
+
+    .report-details {
+      font-size: 0.95rem;
+      color: #333;
+      line-height: 1.8;
+      margin-bottom: 12px;
+    }
+    .report-details b {
+      color: #667eea;
+    }
+
+    .report-actions {
+      display: flex;
+      gap: 8px;
+      margin-top: 14px;
+      flex-wrap: wrap;
+    }
+
+    .report-btn {
+      flex: 1;
+      min-width: 70px;
+      padding: 8px 12px;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+
+    .report-btn-view {
+      background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+    }
+    .report-btn-view:hover {
+      transform: scale(1.05);
+    }
+
+    .report-btn-edit {
+      background: linear-gradient(90deg, #ffa726 0%, #fb8c00 100%);
+      color: #fff;
+    }
+    .report-btn-edit:hover {
+      transform: scale(1.05);
+    }
+
+    .report-btn-print {
+      background: linear-gradient(90deg, #42a5f5 0%, #1e88e5 100%);
+      color: #fff;
+    }
+    .report-btn-print:hover {
+      transform: scale(1.05);
+    }
+
+    .report-btn-delete {
+      background: linear-gradient(90deg, #ef5350 0%, #e53935 100%);
+      color: #fff;
+    }
+    .report-btn-delete:hover {
+      transform: scale(1.05);
+    }
+
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: #999;
+    }
+    .empty-state-icon {
+      font-size: 3.5rem;
+      margin-bottom: 15px;
+    }
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 2000;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal-box {
+      background: #fff;
+      border-radius: 18px;
+      padding: 30px;
+      max-width: 500px;
+      width: 90%;
+      box-shadow: 0 8px 32px #00000044;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-header {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #764ba2;
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-close {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: #999;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      color: #764ba2;
+      margin-bottom: 5px;
+    }
+
+    .form-group input, .form-group textarea, .form-group select {
+      width: 100%;
+      padding: 10px;
+      border: 2px solid #667eea;
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+      border-color: #764ba2;
+      box-shadow: 0 0 8px #764ba244;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+    }
+
+    .modal-btn {
+      flex: 1;
+      padding: 10px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.12s;
+    }
+
+    .modal-btn-save {
+      background: linear-gradient(90deg, #4caf50 0%, #45a049 100%);
+      color: #fff;
+    }
+
+    .modal-btn-cancel {
+      background: #f0f0f0;
+      color: #764ba2;
+      border: 2px solid #764ba2;
+    }
+
+    @media print {
+      body {
+        background: #fff;
+      }
+      .reports-section {
+        background: #fff;
+        box-shadow: none;
+        border-radius: 0;
+      }
+      .back-btn, .top-actions, .filter-section, .report-actions, .header-row {
+        display: none;
+      }
+      .reports-grid {
+        display: block;
+      }
+      .report-card {
+        page-break-inside: avoid;
+        margin-bottom: 30px;
+        border: 2px solid #667eea;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .reports-grid {
+        grid-template-columns: 1fr;
+      }
+      .header-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="reports-container">
+    <div class="reports-section">
+      <div class="header-row">
+        <button class="back-btn" onclick="window.location.href='index.html'">&larr; Back to Home</button>
+        <h2 style="flex:1; text-align:center;">Test Reports</h2>
+      </div>
+
+      <!-- Stats Row -->
+      <div class="stats-row">
+        <div class="stat-box">
+          <div class="stat-box-value" id="total-reports">0</div>
+          <div class="stat-box-label">Total Reports</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-value" id="total-tests">0</div>
+          <div class="stat-box-label">Test Types</div>
+        </div>
+        <div class="stat-box">
+          <div class="stat-box-value" id="total-amount">₹0</div>
+          <div class="stat-box-label">Total Value</div>
+        </div>
+      </div>
+
+      <!-- Top Actions -->
+      <div class="top-actions">
+        <button class="add-btn" onclick="openAddReportModal()">➕ Add New Report</button>
+      </div>
+
+      <!-- Filter Section -->
+      <div class="filter-section">
+        <input type="text" id="search-patient" placeholder="Search by patient name...">
+        <select id="filter-test">
+          <option value="">All Test Types</option>
+          <option value="MRI">MRI</option>
+          <option value="CBC">CBC</option>
+          <option value="CT Scan">CT Scan</option>
+          <option value="X-Ray">X-Ray</option>
+          <option value="ECG">ECG</option>
+          <option value="Blood Test">Blood Test</option>
+          <option value="Ultrasound">Ultrasound</option>
+        </select>
+        <button class="filter-btn" onclick="applyFilters()">🔍 Search</button>
+        <button class="filter-btn" onclick="resetFilters()">↺ Reset</button>
+      </div>
+
+      <!-- Reports Grid -->
+      <div class="reports-grid" id="reports-grid">
+        <!-- Reports will be displayed here -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Edit/
