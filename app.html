@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Asha Diagnostic Center</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="styles1.css">
+</head>
+<body>
+  <div class="header">
+    <img src="asha_logo.png" alt="Asha Logo" class="logo" />
+    <div>
+      <h2>Asha Diagnostic Center</h2>
+      <h3 id="greeting"></h3>
+    </div>
+    <button class="lab-btn" onclick="openModal()">CREATE LAB BILL</button>
+  </div>
+
+  <!-- Bill Modal with new section inserted -->
+  <div id="bill-modal" class="modal">
+    <div class="modal-content">
+      <span class="close" onclick="closeModal()">&times;</span>
+      <h2>Create Lab Bill</h2>
+      <form id="bill-form">
+        <input type="text" placeholder="Patient Name" required>
+        <input type="number" placeholder="Age" required>
+        <input type="text" placeholder="Test Type" required>
+        <input type="number" placeholder="Amount" required>
+        <input type="text" placeholder="Doctor Name (optional)" />
+
+        <!-- New field: Notes -->
+        <textarea placeholder="Notes or special instructions (optional)" rows="3"
+          style="resize:vertical; width:95%; border-radius:7px; border:1.5px solid #d0e6f7; margin-bottom:10px; padding:8px;"></textarea>
+        
+        <!-- File upload -->
+        <div style="margin-bottom:10px;">
+          <label>Attach report/prescription:
+            <input type="file" accept="image/*,.pdf" style="margin-left:6px;">
+          </label>
+        </div>
+
+        <!-- Bill Summary (hidden until preview) -->
+        <div id="bill-summary" style="background:#f5fafc; border-radius:9px; padding:10px 15px; margin-bottom:15px; color:#2463A5; display:none;">
+          <b>Bill Summary:</b>
+          <div id="summary-content"></div>
+        </div>
+        
+        <button type="button" onclick="showBillSummary()">Preview Bill</button>
+        <button type="submit">Create Bill</button>
+        <button type="button" onclick="closeModal()">Cancel</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <!-- Sidebar for quick stats + navigation -->
+    <aside class="sidebar">
+      <div class="stats-card">
+        <div class="stat-item"><span class="icon">👨‍👩‍👦</span>120 Patients</div>
+        <div class="stat-item"><span class="icon">🧪</span>340 Tests</div>
+        <div class="stat-item"><span class="icon">💵</span>₹6,500 Payments</div>
+      </div>
+      <nav class="nav-shortcuts">
+        <a href="#">Patient Details</a>
+        <a href="#">Test Categories</a>
+        <a href="#">Payment History</a>
+      </nav>
+    </aside>
+
+    <!-- Dashboard grid -->
+    <section class="dashboard">
+      <div class="dashboard-item" onclick="window.location.href='bills.html'"><span class="icon">📄</span>Bills</div>
+      <div class="dashboard-item" onclick="window.location.href='reports1.html'"><span class="icon">📊</span>Reports</div>
+
+      <div class="dashboard-item"><span class="icon">👨‍👩‍👦</span>Patients</div>
+      <div class="dashboard-item"><span class="icon">👨‍⚕️</span>Doctors</div>
+      <div class="dashboard-item"><span class="icon">🧪</span>Tests</div>
+      <div class="dashboard-item"><span class="icon">🛒</span>Test Package</div>
+      <div class="dashboard-item"><span class="icon">💵</span>Statistics</div>
+      <div class="dashboard-item"><span class="icon">🆘</span>Help Videos (NEW)</div>
+      <div class="dashboard-item"><span class="icon">🔔</span>Updates & Offers</div>
+      <div class="dashboard-item"><span class="icon">🧑‍🤝‍🧑</span>Staff</div>
+      <div class="dashboard-item"><span class="icon">🚀</span>Business Intelligence</div>
+    </section>
+
+    <!-- Recent activity panel -->
+    <section class="activities">
+      <h4>Recent Activity</h4>
+      <ul>
+        <li>Payment: ₹80 by John Doe</li>
+        <li>New test added: MRI</li>
+        <li>Patient registered: Jane Smith</li>
+      </ul>
+    </section>
+  </div>
+
+  <!-- Floating Live Chat Button -->
+  <div class="live-chat" onclick="openChat()">💬 Live Chat - Ask Help!</div>
+
+  <script>
+    // Greeting message
+    function getGreeting() {
+      const now = new Date();
+      const hour = now.getHours();
+      if (hour < 12) return "Good Morning";
+      else if (hour < 18) return "Good Afternoon";
+      else return "Good Evening";
+    }
+    document.addEventListener("DOMContentLoaded", function() {
+      document.getElementById("greeting").textContent = getGreeting() + ", Krishna!";
+    });
+
+    // Modal functions
+    function openModal() {
+      document.getElementById('bill-modal').style.display = 'block';
+    }
+    function closeModal() {
+      document.getElementById('bill-modal').style.display = 'none';
+      document.getElementById('bill-summary').style.display = 'none';
+    }
+
+    // Bill summary preview function
+    function showBillSummary() {
+      const form = document.getElementById('bill-form');
+      const summaryDiv = document.getElementById('bill-summary');
+      const summaryContent = document.getElementById('summary-content');
+      const fields = form.querySelectorAll('input, textarea');
+      let summaryHtml = "";
+      fields.forEach(field => {
+        if (field.type !== "button" && field.type !== "submit" && field.value) {
+          const label = field.placeholder || field.previousElementSibling?.textContent || "Attachment";
+          if (field.type === "file") {
+            summaryHtml += `<div><b>${label}:</b> ${field.files[0] ? field.files[0].name : "No file"}</div>`;
+          } else {
+            summaryHtml += `<div><b>${label}:</b> ${field.value}</div>`;
+          }
+        }
+      });
+      summaryContent.innerHTML = summaryHtml;
+      summaryDiv.style.display = "block";
+    }
+
+    // Dismiss when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('bill-modal');
+      if (event.target == modal) closeModal();
+    }
+
+    // Dummy Live Chat
+    function openChat() {
+      alert("Live chat coming soon!");
+    }
+  </script>
+</body>
+</html>
